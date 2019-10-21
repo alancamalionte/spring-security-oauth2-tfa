@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
@@ -14,7 +13,6 @@ import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 
 public class CustomTokenEnhancer implements TokenEnhancer {
 
-	
 	@Autowired
     private UsuarioRepository userRepository;
 
@@ -24,15 +22,6 @@ public class CustomTokenEnhancer implements TokenEnhancer {
         Usuario usuario = Optional.ofNullable(userRepository.findByUsername(authentication.getName())).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         final Map<String, Object> additionalInfo = new HashMap<>();
         additionalInfo.put("id", usuario.getId());
-        Authentication userAuthentication = authentication.getUserAuthentication();
-        if (userAuthentication != null) {
-            Object principal = authentication.getUserAuthentication().getPrincipal();
-            if (principal instanceof CustomUserDetails) {//https://stackoverflow.com/questions/49127791/extract-currently-logged-in-user-information-from-jwt-token-using-spring-securit
-                Map<String, Object> additionalInfo = new HashMap<>();
-                additionalInfo.put("userDetails", principal);
-                ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInfo);
-            }
-        }
         ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInfo);
         return accessToken;
     }

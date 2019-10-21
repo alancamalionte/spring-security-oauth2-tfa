@@ -1,8 +1,15 @@
 package dev.sultanov.springboot.oauth2.mfa.config.granter;
 
-import dev.sultanov.springboot.oauth2.mfa.service.MfaService;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.exceptions.InvalidGrantException;
 import org.springframework.security.oauth2.common.exceptions.InvalidRequestException;
@@ -10,32 +17,27 @@ import org.springframework.security.oauth2.common.exceptions.InvalidScopeExcepti
 import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetails;
-import org.springframework.security.oauth2.provider.ClientDetailsService;
-import org.springframework.security.oauth2.provider.ClientRegistrationException;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Request;
 import org.springframework.security.oauth2.provider.TokenRequest;
 import org.springframework.security.oauth2.provider.token.AbstractTokenGranter;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import dev.sultanov.springboot.oauth2.mfa.config.CustomUserDetailsService;
+import dev.sultanov.springboot.oauth2.mfa.service.MfaService;
 
 public class MfaTokenGranter extends AbstractTokenGranter {
     private static final String GRANT_TYPE = "mfa";
 
     private final TokenStore tokenStore;
-    private final ClientDetailsService clientDetailsService;
-    private final AuthenticationManager authenticationManager;
     private final MfaService mfaService;
-
-    public MfaTokenGranter(AuthorizationServerEndpointsConfigurer endpointsConfigurer, AuthenticationManager authenticationManager, MfaService mfaService) {
+	private final CustomUserDetailsService customUserDetailsService;
+   
+	public MfaTokenGranter(AuthorizationServerEndpointsConfigurer endpointsConfigurer, AuthenticationManager authenticationManager, MfaService mfaService, CustomUserDetailsService customUserDetailsService) {
         super(endpointsConfigurer.getTokenServices(), endpointsConfigurer.getClientDetailsService(), endpointsConfigurer.getOAuth2RequestFactory(), GRANT_TYPE);
         this.tokenStore = endpointsConfigurer.getTokenStore();
-        this.clientDetailsService = endpointsConfigurer.getClientDetailsService();
-        this.authenticationManager = authenticationManager;
         this.mfaService = mfaService;
+        this.customUserDetailsService = customUserDetailsService;
     }
 
     @Override
@@ -83,25 +85,15 @@ public class MfaTokenGranter extends AbstractTokenGranter {
         }
     }
 
-    private OAuth2Authentication getAuthentication(TokenRequest tokenRequest, OAuth2Authentication authentication) {
-        Authentication user = authenticationManager.authenticate(authentication.getUserAuthentication());
-        Object details = authentication.getDetails();
-        authentication = new OAuth2Authentication(authentication.getOAuth2Request(), user);
-        authentication.setDetails(details);
 
-        String clientId = authentication.getOAuth2Request().getClientId();
-        if (clientId != null && clientId.equals(tokenRequest.getClientId())) {
-            if (this.clientDetailsService != null) {
-                try {
-                    this.clientDetailsService.loadClientByClientId(clientId);
-                } catch (ClientRegistrationException e) {
-                    throw new InvalidTokenException("Client not valid: " + clientId, e);
-                }
-            }
-            return refreshAuthentication(authentication, tokenRequest);
-        } else {
-            throw new InvalidGrantException("Client is missing or does not correspond to the MFA token");
-        }
+	
+    private OAuth2Authentication getAuthentication(TokenRequest tokenRequest, OAuth2Authentication authentication) {
+		Authentication userAuthentication = authentication.getUserAuthentication();
+		UserDetails loadUserByUsername = customUserDetailsService.loadUserByUsername(authentication.getUserAuthentication().getName());
+		Collection<? extends GrantedAuthority> authorities = loadUserByUsername.getAuthorities();
+		userAuthentication = new UsernamePasswordAuthenticationToken(loadUserByUsername, userAuthentication.getCredentials(), authorities);
+		authentication = new OAuth2Authentication(authentication.getOAuth2Request(), userAuthentication);
+		return refreshAuthentication(authentication, tokenRequest);
     }
 
     private OAuth2Authentication refreshAuthentication(OAuth2Authentication authentication, TokenRequest request) {

@@ -37,7 +37,10 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 
     @Autowired
     private MfaService mfaService;
-    
+
+	@Autowired
+	private CustomUserDetailsService extendedPrincipal;
+	
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) {
         security.checkTokenAccess("isAuthenticated()");
@@ -90,7 +93,7 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
     private TokenGranter tokenGranter(final AuthorizationServerEndpointsConfigurer endpoints) {
         List<TokenGranter> granters = new ArrayList<>(Arrays.asList(endpoints.getTokenGranter()));
         granters.add(new PasswordTokenGranter(endpoints, authenticationManager, mfaService));
-        granters.add(new MfaTokenGranter(endpoints, authenticationManager, mfaService));
+        granters.add(new MfaTokenGranter(endpoints, authenticationManager, mfaService, extendedPrincipal));
         return new CompositeTokenGranter(granters);
     }
 }
