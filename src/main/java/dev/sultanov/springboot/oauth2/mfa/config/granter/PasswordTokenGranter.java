@@ -25,6 +25,7 @@ import dev.sultanov.springboot.oauth2.mfa.config.UserRepository;
 import dev.sultanov.springboot.oauth2.mfa.exception.MfaRequiredException;
 import dev.sultanov.springboot.oauth2.mfa.model.User;
 
+
 public class PasswordTokenGranter extends AbstractTokenGranter {
     
 	private static final String GRANT_TYPE = "password";

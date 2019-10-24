@@ -13,7 +13,6 @@ public class MfaService {
 
 
     public boolean verifyCode(UserDetailsCustom userDetails, int code) {
-    	
     	// TODO implementar kms
         return googleAuthenticator.authorize(userDetails.getGoogleCredentials().getKey(), code);
     }

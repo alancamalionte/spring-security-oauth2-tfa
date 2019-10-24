@@ -41,13 +41,15 @@ public class User  {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate birthDate;
     
+    private long celular;
+    
     private String identity;
     
     private IdentityType identityType;
     
-    private long celular;
-    
     private boolean googleAuthGenerated;
+    
+	private GoogleCredentials googleAthCredentials;
     
     private boolean googleAuthEnable;
     
