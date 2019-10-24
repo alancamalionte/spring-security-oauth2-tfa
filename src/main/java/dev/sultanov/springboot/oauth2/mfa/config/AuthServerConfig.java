@@ -43,7 +43,9 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 	
 	@Autowired
     private UserRepository userRepository;
-
+	@Autowired
+	private CustomAccessTokenConverter customAccessTokenConverter;
+	
 	@Override
 	public void configure(AuthorizationServerSecurityConfigurer security) {
 		security.checkTokenAccess("isAuthenticated()");
@@ -76,6 +78,7 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 	@Bean
 	public JwtAccessTokenConverter accessTokenConverter() {
 		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+        converter.setAccessTokenConverter(customAccessTokenConverter);
 		converter.setSigningKey("123");
 		return converter;
 	}

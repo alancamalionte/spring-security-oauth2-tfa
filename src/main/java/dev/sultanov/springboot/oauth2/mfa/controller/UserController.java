@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,6 +25,7 @@ import com.warrenstrange.googleauth.GoogleAuthenticatorQRGenerator;
 
 import dev.sultanov.springboot.oauth2.mfa.config.UserRepository;
 import dev.sultanov.springboot.oauth2.mfa.exception.ApiException;
+import dev.sultanov.springboot.oauth2.mfa.model.GoogleCredentials;
 import dev.sultanov.springboot.oauth2.mfa.model.User;
 import dev.sultanov.springboot.oauth2.mfa.model.UserDto;
 import lombok.extern.slf4j.Slf4j;
@@ -70,52 +72,23 @@ public class UserController {
 		usuarioRepository.save(user);
 	}
 
-	@PostMapping("/tfa/{token}")
-	public String activeGoogleAuthenticator(@PathVariable String token) {
-		User usuario = usuarioRepository.findByVerificationCode(token);
+	@PutMapping("/{id}/enable-tfa")
+	@PreAuthorize("#oauth2.hasRole('ROLE_USER')")
+	public String activeGoogleAuthenticator(@PathVariable String id) {
+		User user = usuarioRepository.findById(id).orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, 3, "Usuário não encontrado"));
 		final GoogleAuthenticatorConfigBuilder gacb =
 				new GoogleAuthenticatorConfigBuilder()
 				.setTimeStepSizeInMillis(TimeUnit.SECONDS.toMillis(30))
 				.setWindowSize(5)
 				.setNumberOfScratchCodes(10);
-
 		final GoogleAuthenticator gAuth = new GoogleAuthenticator(gacb.build());
 		final GoogleAuthenticatorKey credentials = gAuth.createCredentials();
-		return GoogleAuthenticatorQRGenerator.getOtpAuthURL("BitBotBox", usuario.getName(), credentials);
+		user.setGoogleAuthCredentials(new GoogleCredentials(credentials.getScratchCodes(), credentials.getKey()));
+		user.setGoogleAuthEnable(true);
+		usuarioRepository.save(user);
+		return GoogleAuthenticatorQRGenerator.getOtpAuthURL("BitBotBox", user.getName(), credentials);
 	}
 
-	public static void main(String[] args) {
-		GoogleAuthenticatorConfigBuilder gacb =
-				new GoogleAuthenticatorConfigBuilder()
-				.setTimeStepSizeInMillis(TimeUnit.SECONDS.toMillis(30))
-				.setWindowSize(5)
-				.setNumberOfScratchCodes(10);
-
-		GoogleAuthenticator gAuth = new GoogleAuthenticator(gacb.build());
-		//		
-		final GoogleAuthenticatorKey credentials = gAuth.createCredentials();
-		System.out.println(credentials.getKey());
-		System.out.println(credentials.getVerificationCode());
-		System.out.println(credentials.getScratchCodes());
-
-
-		//		System.out.println(gAuth.authorize("LKHXM2VYFC7EJRZP", 884136));
-		//		System.out.println(gAuth.authorize("JZ2YFY75HWQQ32CW", 235595));
-		//		System.out.println(gAuth.authorize("JZ2YFY75HWQQ32CW", 716567));
-		//		System.out.println(gAuth.authorize("JZ2YFY75HWQQ32CW", 494924));
-
-
-		String QRCode = GoogleAuthenticatorQRGenerator.getOtpAuthURL("sadsad", "alan", credentials);
-		System.out.println(QRCode);
-
-
-	}
 
 }
-//JZ2YFY75HWQQ32CW
-//887606
-//[98618758, 86207758, 97929790, 36894139, 49264211, 63039633, 26130229, 32314932, 37509234, 34950616]
-//false
-//false
-//https://chart.googleapis.com/chart?chs=200x200&chld=M%7C0&cht=qr&chl=otpauth%3A%2F%2Ftotp%2Fsadsad%3Aalan%3Fsecret%3DJZ2YFY75HWQQ32CW%26issuer%3Dsadsad%26algorithm%3DSHA1%26digits%3D6%26period%3D30
 

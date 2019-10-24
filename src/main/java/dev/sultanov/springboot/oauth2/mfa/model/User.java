@@ -49,8 +49,6 @@ public class User  {
     
     private boolean googleAuthGenerated;
     
-	private GoogleCredentials googleAthCredentials;
-    
     private boolean googleAuthEnable;
     
     private boolean active;
