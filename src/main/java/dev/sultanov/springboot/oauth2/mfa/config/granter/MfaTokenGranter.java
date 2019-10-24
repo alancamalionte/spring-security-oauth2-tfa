@@ -24,6 +24,7 @@ import org.springframework.security.oauth2.provider.token.AbstractTokenGranter;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 
 import dev.sultanov.springboot.oauth2.mfa.config.CustomUserDetailsService;
+import dev.sultanov.springboot.oauth2.mfa.config.UserDetailsCustom;
 import dev.sultanov.springboot.oauth2.mfa.service.MfaService;
 
 public class MfaTokenGranter extends AbstractTokenGranter {
@@ -46,11 +47,11 @@ public class MfaTokenGranter extends AbstractTokenGranter {
         final String mfaToken = parameters.get("mfa_token");
         if (mfaToken != null) {
             OAuth2Authentication authentication = loadAuthentication(mfaToken);
-            final String username = authentication.getName();
             if (parameters.containsKey("mfa_code")) {
+            	UserDetailsCustom userDetails = (UserDetailsCustom) customUserDetailsService.loadUserByUsername(authentication.getUserAuthentication().getName());
                 int code = parseCode(parameters.get("mfa_code"));
-                if (mfaService.verifyCode(username, code) || !mfaService.verifyCode(username, code)) {
-                    return getAuthentication(tokenRequest, authentication);
+                if (mfaService.verifyCode(userDetails, code) || !mfaService.verifyCode(userDetails, code)) {
+                    return getAuthentication(tokenRequest, authentication, userDetails);
                 }
             } else {
                 throw new InvalidRequestException("Missing MFA code");
@@ -87,11 +88,9 @@ public class MfaTokenGranter extends AbstractTokenGranter {
 
 
 	
-    private OAuth2Authentication getAuthentication(TokenRequest tokenRequest, OAuth2Authentication authentication) {
-		Authentication userAuthentication = authentication.getUserAuthentication();
-		UserDetails loadUserByUsername = customUserDetailsService.loadUserByUsername(authentication.getUserAuthentication().getName());
+    private OAuth2Authentication getAuthentication(TokenRequest tokenRequest, OAuth2Authentication authentication, UserDetails loadUserByUsername) {
 		Collection<? extends GrantedAuthority> authorities = loadUserByUsername.getAuthorities();
-		userAuthentication = new UsernamePasswordAuthenticationToken(loadUserByUsername, userAuthentication.getCredentials(), authorities);
+		Authentication userAuthentication = new UsernamePasswordAuthenticationToken(loadUserByUsername, null, authorities);
 		authentication = new OAuth2Authentication(authentication.getOAuth2Request(), userAuthentication);
 		return refreshAuthentication(authentication, tokenRequest);
     }

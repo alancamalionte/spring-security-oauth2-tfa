@@ -3,6 +3,7 @@ package dev.sultanov.springboot.oauth2.mfa.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -22,9 +23,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .anyRequest()
-                .authenticated();
+//        http.authorizeRequests()
+//		        .antMatchers("/v1/user/**").permitAll()
+//                .anyRequest()
+//                .authenticated();
+		http.authorizeRequests()
+		.antMatchers(HttpMethod.POST, "/v1/user").permitAll()
+		.anyRequest()
+		.authenticated()
+		.and().cors().disable().csrf().disable();    	
     }
 
     @Override

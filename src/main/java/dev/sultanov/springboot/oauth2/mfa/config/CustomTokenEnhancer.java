@@ -11,6 +11,8 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 
+import dev.sultanov.springboot.oauth2.mfa.model.Usuario;
+
 public class CustomTokenEnhancer implements TokenEnhancer {
 
 	@Autowired

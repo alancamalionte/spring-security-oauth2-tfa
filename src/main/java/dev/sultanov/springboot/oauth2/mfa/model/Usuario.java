@@ -1,7 +1,6 @@
-package dev.sultanov.springboot.oauth2.mfa.config;
+package dev.sultanov.springboot.oauth2.mfa.model;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -33,15 +32,23 @@ public class Usuario  {
     
     private List<GrantedAuthority> authoritys;
 
-    private boolean admin;
-    
     @DateTimeFormat(pattern = "dd/MM/yyyy", iso = ISO.DATE_TIME)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate dataNascimento;
     
-    private String cpf;
+    private String identity;
     
-    private Long celular;
+    private IdentityType identityType;
+    
+    private long celular;
+    
+    private boolean googleAuthGenerated;
+    
+    private boolean active;
+
+	private String verificationCode;
+	
+	private GoogleCredentials googleAthCredentials;
     
 
 }
