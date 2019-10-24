@@ -1,7 +1,6 @@
-package dev.sultanov.springboot.oauth2.mfa.config;
+package dev.sultanov.springboot.oauth2.mfa.model;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -10,15 +9,21 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.security.core.GrantedAuthority;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Usuario  {
+@Builder
+@JsonInclude(value = Include.NON_NULL)
+public class User  {
 
 	@Id
 	private String id;
@@ -27,21 +32,30 @@ public class Usuario  {
 	
     private String password;
     
-    private String passwordConfirm;
-    
     private String name;
     
+    @JsonIgnore
     private List<GrantedAuthority> authoritys;
 
-    private boolean admin;
-    
     @DateTimeFormat(pattern = "dd/MM/yyyy", iso = ISO.DATE_TIME)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-    private LocalDate dataNascimento;
+    private LocalDate birthDate;
     
-    private String cpf;
+    private String identity;
     
-    private Long celular;
+    private IdentityType identityType;
     
+    private long celular;
+    
+    private boolean googleAuthGenerated;
+    
+    private boolean googleAuthEnable;
+    
+    private boolean active;
+
+	private String verificationCode;
+	
+	private GoogleCredentials googleAuthCredentials;
+	
 
 }

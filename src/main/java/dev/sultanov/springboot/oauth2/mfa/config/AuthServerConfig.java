@@ -31,69 +31,64 @@ import dev.sultanov.springboot.oauth2.mfa.service.MfaService;
 @EnableAuthorizationServer
 public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 
-    @Autowired
-    @Qualifier("authenticationManagerBean")
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private MfaService mfaService;
+	@Autowired
+	@Qualifier("authenticationManagerBean")
+	private AuthenticationManager authenticationManager;
 
 	@Autowired
-	private CustomUserDetailsService extendedPrincipal;
+	private MfaService mfaService;
+
+	@Autowired
+	private CustomUserDetailsService customUserDetailsService;
 	
-    @Override
-    public void configure(AuthorizationServerSecurityConfigurer security) {
-        security.checkTokenAccess("isAuthenticated()");
-    }
+	@Autowired
+    private UserRepository userRepository;
 
-    @Override
-    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-    	clients.inMemory()
-    	.withClient("client")
-    	.secret(PasswordEncoderFactories.createDelegatingPasswordEncoder().encode("secret"))
-    	.authorizedGrantTypes("password", "mfa")
-    	.scopes("read");
-    }
-    
-    
-    @Override
-    public void configure(final AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        final TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
-        tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer(), accessTokenConverter()));
-        endpoints
-        	.tokenStore(tokenStore())
-            .tokenEnhancer(tokenEnhancerChain)
-            .tokenGranter(tokenGranter(endpoints));
-//            .authenticationManager(authenticationManager);
-    }    
-    @Bean
-    public TokenStore tokenStore() {
-        return new JwtTokenStore(accessTokenConverter());
-    }
-    
-    @Bean
-    public JwtAccessTokenConverter accessTokenConverter() {
-        JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-//        converter.setSigningKey("123");
-        return converter;
-    }
-    
-    @Bean
-    public TokenEnhancer tokenEnhancer() {
-        return new CustomTokenEnhancer();
-    }    
+	@Override
+	public void configure(AuthorizationServerSecurityConfigurer security) {
+		security.checkTokenAccess("isAuthenticated()");
+//		security.tokenKeyAccess("permitAll()").checkTokenAccess("permitAll()");
+	}
 
-//    @Override
-//    public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
-//    	endpoints.tokenGranter(tokenGranter(endpoints));
-//    }
-    
-    
+	@Override
+	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+		clients.inMemory()
+		.withClient("client")
+		.secret(PasswordEncoderFactories.createDelegatingPasswordEncoder().encode("secret"))
+		.authorizedGrantTypes("password", "mfa")
+		.scopes("read");
+	}
 
-    private TokenGranter tokenGranter(final AuthorizationServerEndpointsConfigurer endpoints) {
-        List<TokenGranter> granters = new ArrayList<>(Arrays.asList(endpoints.getTokenGranter()));
-        granters.add(new PasswordTokenGranter(endpoints, authenticationManager, mfaService));
-        granters.add(new MfaTokenGranter(endpoints, authenticationManager, mfaService, extendedPrincipal));
-        return new CompositeTokenGranter(granters);
-    }
+
+	@Override
+	public void configure(final AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+		final TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
+		tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer(), accessTokenConverter()));
+		endpoints.tokenStore(tokenStore())
+		.tokenEnhancer(tokenEnhancerChain)
+		.tokenGranter(tokenGranter(endpoints));
+	}    
+	@Bean
+	public TokenStore tokenStore() {
+		return new JwtTokenStore(accessTokenConverter());
+	}
+
+	@Bean
+	public JwtAccessTokenConverter accessTokenConverter() {
+		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+		converter.setSigningKey("123");
+		return converter;
+	}
+
+	@Bean
+	public TokenEnhancer tokenEnhancer() {
+		return new CustomTokenEnhancer();
+	}    
+
+	private TokenGranter tokenGranter(final AuthorizationServerEndpointsConfigurer endpoints) {
+		List<TokenGranter> granters = new ArrayList<>(Arrays.asList(endpoints.getTokenGranter()));
+		granters.add(new PasswordTokenGranter(endpoints, authenticationManager, userRepository));
+		granters.add(new MfaTokenGranter(endpoints, authenticationManager, mfaService, customUserDetailsService));
+		return new CompositeTokenGranter(granters);
+	}
 }
