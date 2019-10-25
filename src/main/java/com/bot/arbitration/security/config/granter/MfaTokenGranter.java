@@ -1,4 +1,4 @@
-package com.box.arbitration.config.granter;
+package com.bot.arbitration.security.config.granter;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -23,9 +23,9 @@ import org.springframework.security.oauth2.provider.TokenRequest;
 import org.springframework.security.oauth2.provider.token.AbstractTokenGranter;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 
-import com.box.arbitration.config.CustomUserDetailsService;
-import com.box.arbitration.config.UserDetailsCustom;
-import com.box.arbitration.service.MfaService;
+import com.bot.arbitration.security.config.CustomUserDetailsService;
+import com.bot.arbitration.security.config.UserDetailsCustom;
+import com.bot.arbitration.security.service.MfaService;
 
 public class MfaTokenGranter extends AbstractTokenGranter {
     private static final String GRANT_TYPE = "mfa";

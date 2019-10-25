@@ -1,4 +1,4 @@
-package com.box.arbitration.config;
+package com.bot.arbitration.security.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;

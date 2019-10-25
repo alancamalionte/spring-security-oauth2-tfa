@@ -1,10 +1,10 @@
-package com.box.arbitration.config;
+package com.bot.arbitration.security.config;
 
 import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import com.box.arbitration.model.User;
+import com.bot.arbitration.security.model.User;
 
 public interface UserRepository extends MongoRepository<User, String> {
 

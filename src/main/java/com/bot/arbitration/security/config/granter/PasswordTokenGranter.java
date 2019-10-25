@@ -1,10 +1,9 @@
-package com.box.arbitration.config.granter;
+package com.bot.arbitration.security.config.granter;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AccountStatusException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,10 +22,9 @@ import org.springframework.security.oauth2.provider.OAuth2Request;
 import org.springframework.security.oauth2.provider.TokenRequest;
 import org.springframework.security.oauth2.provider.token.AbstractTokenGranter;
 
-import com.box.arbitration.config.UserRepository;
-import com.box.arbitration.exception.ApiException;
-import com.box.arbitration.exception.MfaRequiredException;
-import com.box.arbitration.model.User;
+import com.bot.arbitration.security.config.UserRepository;
+import com.bot.arbitration.security.exception.MfaRequiredException;
+import com.bot.arbitration.security.model.User;
 
 
 public class PasswordTokenGranter extends AbstractTokenGranter {

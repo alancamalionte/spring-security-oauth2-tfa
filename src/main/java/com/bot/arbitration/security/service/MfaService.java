@@ -1,8 +1,8 @@
-package com.box.arbitration.service;
+package com.bot.arbitration.security.service;
 
 import org.springframework.stereotype.Service;
 
-import com.box.arbitration.config.UserDetailsCustom;
+import com.bot.arbitration.security.config.UserDetailsCustom;
 import com.warrenstrange.googleauth.GoogleAuthenticator;
 
 @Service

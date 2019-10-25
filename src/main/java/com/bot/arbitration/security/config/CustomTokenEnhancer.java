@@ -1,4 +1,4 @@
-package com.box.arbitration.config;
+package com.bot.arbitration.security.config;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +10,7 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 
-import com.box.arbitration.model.User;
+import com.bot.arbitration.security.model.User;
 
 public class CustomTokenEnhancer implements TokenEnhancer {
 

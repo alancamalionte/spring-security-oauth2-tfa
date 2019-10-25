@@ -1,5 +1,8 @@
-package com.box.arbitration.controller;
+package com.bot.arbitration.security.controller;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -18,11 +21,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.box.arbitration.config.UserRepository;
-import com.box.arbitration.exception.ApiException;
-import com.box.arbitration.model.GoogleCredentials;
-import com.box.arbitration.model.User;
-import com.box.arbitration.model.UserDto;
+import com.bot.arbitration.security.config.UserRepository;
+import com.bot.arbitration.security.exception.ApiException;
+import com.bot.arbitration.security.model.GoogleCredentials;
+import com.bot.arbitration.security.model.User;
+import com.bot.arbitration.security.model.UserDto;
 import com.warrenstrange.googleauth.GoogleAuthenticator;
 import com.warrenstrange.googleauth.GoogleAuthenticatorConfig.GoogleAuthenticatorConfigBuilder;
 import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
@@ -40,6 +43,7 @@ public class UserController {
 
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
+	@PreAuthorize("permitAll()")
 	public void create(@RequestBody UserDto userDto) {
 		if(userDto.getPassword().equals(userDto.getPasswordConfirm())) {
 			PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
@@ -74,19 +78,34 @@ public class UserController {
 
 	@PutMapping("/{id}/change-tfa/{enable}")
 	@PreAuthorize("hasRole('ROLE_USER')")
-	public String activeGoogleAuthenticator(@PathVariable String id, @PathVariable boolean enable) {
+	public Map<String, String> activeGoogleAuthenticator(@PathVariable String id, @PathVariable boolean enable) {
 		User user = usuarioRepository.findById(id).orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, 3, "Usuário não encontrado"));
-		final GoogleAuthenticatorConfigBuilder gacb =
-				new GoogleAuthenticatorConfigBuilder()
-				.setTimeStepSizeInMillis(TimeUnit.SECONDS.toMillis(30))
-				.setWindowSize(5)
-				.setNumberOfScratchCodes(10);
-		final GoogleAuthenticator gAuth = new GoogleAuthenticator(gacb.build());
-		final GoogleAuthenticatorKey credentials = gAuth.createCredentials();
-		user.setGoogleAuthCredentials(new GoogleCredentials(credentials.getScratchCodes(), credentials.getKey()));
-		user.setGoogleAuthEnable(true);
+		Map<String, String> retorno = new HashMap<>();
+		if(user.isGoogleAuthEnable() && enable) {
+			throw new ApiException(HttpStatus.BAD_GATEWAY, 400, "Google Auth already enable");
+		}  else if(user.isGoogleAuthEnable() && !enable) {
+			user.setGoogleAuthEnable(false);
+		} else if(!user.isGoogleAuthEnable() && enable) {
+
+			if(!user.isGoogleAuthGenerated()) {
+				final GoogleAuthenticatorConfigBuilder gacb =
+						new GoogleAuthenticatorConfigBuilder()
+						.setTimeStepSizeInMillis(TimeUnit.SECONDS.toMillis(30))
+						.setWindowSize(5)
+						.setNumberOfScratchCodes(10);
+				final GoogleAuthenticator gAuth = new GoogleAuthenticator(gacb.build());
+				final GoogleAuthenticatorKey credentials = gAuth.createCredentials();
+				user.setGoogleAuthCredentials(new GoogleCredentials(credentials.getScratchCodes(), credentials.getKey()));
+				user.setGoogleAuthEnable(true);
+				user.setGoogleAuthGenerated(true);
+				usuarioRepository.save(user);
+				retorno.put("newGoogleAuthCredentials", "true");
+				retorno.put("QRCode", GoogleAuthenticatorQRGenerator.getOtpAuthURL("BitBotBox", user.getName(), credentials));
+				return retorno;
+			}
+		}
 		usuarioRepository.save(user);
-		return GoogleAuthenticatorQRGenerator.getOtpAuthURL("BitBotBox", user.getName(), credentials);
+		return Collections.singletonMap("newGoogleAuthCredentials", "false");
 	}
 
 

@@ -1,4 +1,4 @@
-package com.box.arbitration.config;
+package com.bot.arbitration.security.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -28,7 +28,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .anyRequest()
 //                .authenticated();
 		http.authorizeRequests()
-		.antMatchers(HttpMethod.POST, "/v1/user").permitAll()
+		.antMatchers(HttpMethod.POST, "/v1/user**").permitAll()
 		.antMatchers(HttpMethod.PATCH, "/v1/user/activate/**").permitAll()
 		.anyRequest()
 		.authenticated()

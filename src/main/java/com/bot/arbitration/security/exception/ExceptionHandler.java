@@ -1,4 +1,4 @@
-package com.box.arbitration.exception;
+package com.bot.arbitration.security.exception;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED;

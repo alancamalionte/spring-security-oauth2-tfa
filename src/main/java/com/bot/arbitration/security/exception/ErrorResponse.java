@@ -1,4 +1,4 @@
-package com.box.arbitration.exception;
+package com.bot.arbitration.security.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

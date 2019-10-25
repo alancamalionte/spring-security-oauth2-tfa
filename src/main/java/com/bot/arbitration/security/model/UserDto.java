@@ -1,4 +1,4 @@
-package com.box.arbitration.model;
+package com.bot.arbitration.security.model;
 
 import java.time.LocalDate;
 

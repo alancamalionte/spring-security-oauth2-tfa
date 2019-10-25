@@ -1,4 +1,4 @@
-package com.box.arbitration.config;
+package com.bot.arbitration.security.config;
 
 import java.util.Map;
 
