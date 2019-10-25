@@ -1,4 +1,4 @@
-package dev.sultanov.springboot.oauth2.mfa.controller;
+package com.box.arbitration.controller;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -18,16 +18,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.box.arbitration.config.UserRepository;
+import com.box.arbitration.exception.ApiException;
+import com.box.arbitration.model.GoogleCredentials;
+import com.box.arbitration.model.User;
+import com.box.arbitration.model.UserDto;
 import com.warrenstrange.googleauth.GoogleAuthenticator;
 import com.warrenstrange.googleauth.GoogleAuthenticatorConfig.GoogleAuthenticatorConfigBuilder;
 import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
 import com.warrenstrange.googleauth.GoogleAuthenticatorQRGenerator;
 
-import dev.sultanov.springboot.oauth2.mfa.config.UserRepository;
-import dev.sultanov.springboot.oauth2.mfa.exception.ApiException;
-import dev.sultanov.springboot.oauth2.mfa.model.GoogleCredentials;
-import dev.sultanov.springboot.oauth2.mfa.model.User;
-import dev.sultanov.springboot.oauth2.mfa.model.UserDto;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
@@ -61,21 +61,21 @@ public class UserController {
 
 	@PatchMapping("/activate/{verificationCode}")
 	public void activate(@PathVariable String verificationCode) {
-		User user = usuarioRepository.findByVerificationCode(verificationCode);
+		User user = usuarioRepository.findByVerificationCode(verificationCode).orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, 6, "Verification code not found"));
 		user.setActive(true);
 		usuarioRepository.save(user);
 	}
 
 	@PutMapping("/{id}")
 	public void update(@RequestBody UserDto userDto, @PathVariable String id) {
-		User user = usuarioRepository.findById(id).orElseThrow(() ->new ApiException(HttpStatus.BAD_REQUEST, 2, "Usuário não encontrado"));
+		User user = usuarioRepository.findById(id).orElseThrow(() ->new ApiException(HttpStatus.NOT_FOUND, 2, "Usuário não encontrado"));
 		usuarioRepository.save(user);
 	}
 
-	@PutMapping("/{id}/enable-tfa")
-	@PreAuthorize("#oauth2.hasRole('ROLE_USER')")
-	public String activeGoogleAuthenticator(@PathVariable String id) {
-		User user = usuarioRepository.findById(id).orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, 3, "Usuário não encontrado"));
+	@PutMapping("/{id}/change-tfa/{enable}")
+	@PreAuthorize("hasRole('ROLE_USER')")
+	public String activeGoogleAuthenticator(@PathVariable String id, @PathVariable boolean enable) {
+		User user = usuarioRepository.findById(id).orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, 3, "Usuário não encontrado"));
 		final GoogleAuthenticatorConfigBuilder gacb =
 				new GoogleAuthenticatorConfigBuilder()
 				.setTimeStepSizeInMillis(TimeUnit.SECONDS.toMillis(30))

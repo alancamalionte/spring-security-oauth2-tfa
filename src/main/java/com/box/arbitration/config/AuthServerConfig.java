@@ -1,4 +1,4 @@
-package dev.sultanov.springboot.oauth2.mfa.config;
+package com.box.arbitration.config;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,6 +13,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.CompositeTokenGranter;
@@ -23,12 +24,13 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
-import dev.sultanov.springboot.oauth2.mfa.config.granter.MfaTokenGranter;
-import dev.sultanov.springboot.oauth2.mfa.config.granter.PasswordTokenGranter;
-import dev.sultanov.springboot.oauth2.mfa.service.MfaService;
+import com.box.arbitration.config.granter.MfaTokenGranter;
+import com.box.arbitration.config.granter.PasswordTokenGranter;
+import com.box.arbitration.service.MfaService;
 
 @Configuration
 @EnableAuthorizationServer
+@EnableResourceServer
 public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 
 	@Autowired
@@ -43,6 +45,7 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 	
 	@Autowired
     private UserRepository userRepository;
+	
 	@Autowired
 	private CustomAccessTokenConverter customAccessTokenConverter;
 	

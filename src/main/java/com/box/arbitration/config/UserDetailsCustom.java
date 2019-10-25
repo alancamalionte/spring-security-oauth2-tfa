@@ -1,4 +1,4 @@
-package dev.sultanov.springboot.oauth2.mfa.config;
+package com.box.arbitration.config;
 
 import java.util.Collection;
 import java.util.List;
@@ -6,7 +6,8 @@ import java.util.List;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
-import dev.sultanov.springboot.oauth2.mfa.model.GoogleCredentials;
+import com.box.arbitration.model.GoogleCredentials;
+
 import lombok.Getter;
 
 @Getter

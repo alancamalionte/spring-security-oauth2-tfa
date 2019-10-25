@@ -1,10 +1,9 @@
-package dev.sultanov.springboot.oauth2.mfa.service;
+package com.box.arbitration.service;
 
 import org.springframework.stereotype.Service;
 
+import com.box.arbitration.config.UserDetailsCustom;
 import com.warrenstrange.googleauth.GoogleAuthenticator;
-
-import dev.sultanov.springboot.oauth2.mfa.config.UserDetailsCustom;
 
 @Service
 public class MfaService {

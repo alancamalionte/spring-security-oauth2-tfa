@@ -1,4 +1,4 @@
-package dev.sultanov.springboot.oauth2.mfa.exception;
+package com.box.arbitration.exception;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED;

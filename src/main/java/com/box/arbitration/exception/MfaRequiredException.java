@@ -1,4 +1,4 @@
-package dev.sultanov.springboot.oauth2.mfa.exception;
+package com.box.arbitration.exception;
 
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 

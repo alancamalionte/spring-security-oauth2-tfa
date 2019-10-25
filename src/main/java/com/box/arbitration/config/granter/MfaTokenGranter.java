@@ -1,4 +1,4 @@
-package dev.sultanov.springboot.oauth2.mfa.config.granter;
+package com.box.arbitration.config.granter;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -23,9 +23,9 @@ import org.springframework.security.oauth2.provider.TokenRequest;
 import org.springframework.security.oauth2.provider.token.AbstractTokenGranter;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 
-import dev.sultanov.springboot.oauth2.mfa.config.CustomUserDetailsService;
-import dev.sultanov.springboot.oauth2.mfa.config.UserDetailsCustom;
-import dev.sultanov.springboot.oauth2.mfa.service.MfaService;
+import com.box.arbitration.config.CustomUserDetailsService;
+import com.box.arbitration.config.UserDetailsCustom;
+import com.box.arbitration.service.MfaService;
 
 public class MfaTokenGranter extends AbstractTokenGranter {
     private static final String GRANT_TYPE = "mfa";
@@ -50,7 +50,7 @@ public class MfaTokenGranter extends AbstractTokenGranter {
             if (parameters.containsKey("mfa_code")) {
             	UserDetailsCustom userDetails = (UserDetailsCustom) customUserDetailsService.loadUserByUsername(authentication.getUserAuthentication().getName());
                 int code = parseCode(parameters.get("mfa_code"));
-                if (mfaService.verifyCode(userDetails, code) || !mfaService.verifyCode(userDetails, code)) {
+                if (mfaService.verifyCode(userDetails, code)) {
                     return getAuthentication(tokenRequest, authentication, userDetails);
                 }
             } else {

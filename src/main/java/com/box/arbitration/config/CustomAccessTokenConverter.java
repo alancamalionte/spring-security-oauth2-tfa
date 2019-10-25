@@ -1,4 +1,4 @@
-package dev.sultanov.springboot.oauth2.mfa.config;
+package com.box.arbitration.config;
 
 import java.util.Map;
 

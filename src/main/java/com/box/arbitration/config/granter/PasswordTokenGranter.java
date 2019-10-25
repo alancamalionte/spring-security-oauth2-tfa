@@ -1,9 +1,10 @@
-package dev.sultanov.springboot.oauth2.mfa.config.granter;
+package com.box.arbitration.config.granter;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AccountStatusException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.exceptions.InvalidGrantException;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
@@ -21,9 +23,10 @@ import org.springframework.security.oauth2.provider.OAuth2Request;
 import org.springframework.security.oauth2.provider.TokenRequest;
 import org.springframework.security.oauth2.provider.token.AbstractTokenGranter;
 
-import dev.sultanov.springboot.oauth2.mfa.config.UserRepository;
-import dev.sultanov.springboot.oauth2.mfa.exception.MfaRequiredException;
-import dev.sultanov.springboot.oauth2.mfa.model.User;
+import com.box.arbitration.config.UserRepository;
+import com.box.arbitration.exception.ApiException;
+import com.box.arbitration.exception.MfaRequiredException;
+import com.box.arbitration.model.User;
 
 
 public class PasswordTokenGranter extends AbstractTokenGranter {
@@ -56,7 +59,7 @@ public class PasswordTokenGranter extends AbstractTokenGranter {
         }
 
         if (userAuth != null && userAuth.isAuthenticated()) {
-        	User user = usuarioRepository.findByUsername(username);
+        	User user = usuarioRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
             OAuth2Request storedOAuth2Request = this.getRequestFactory().createOAuth2Request(client, tokenRequest);
             if (user.isGoogleAuthEnable()) {
                 userAuth = new UsernamePasswordAuthenticationToken(username, password, Collections.singleton(PRE_AUTH));

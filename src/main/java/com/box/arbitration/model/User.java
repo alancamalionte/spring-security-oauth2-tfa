@@ -1,4 +1,4 @@
-package dev.sultanov.springboot.oauth2.mfa.model;
+package com.box.arbitration.model;
 
 import java.time.LocalDate;
 import java.util.List;
