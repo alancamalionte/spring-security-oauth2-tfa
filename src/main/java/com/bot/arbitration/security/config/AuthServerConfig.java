@@ -59,7 +59,9 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 		.withClient("client")
 		.secret(PasswordEncoderFactories.createDelegatingPasswordEncoder().encode("secret"))
 		.authorizedGrantTypes("password", "mfa")
-		.scopes("read");
+		.scopes("read")
+		.accessTokenValiditySeconds(3600)
+		.refreshTokenValiditySeconds(7200);
 	}
 
 
