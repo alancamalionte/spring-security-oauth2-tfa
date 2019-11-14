@@ -7,7 +7,6 @@
 /media/alan/particao/git/bot/spring-security-oauth2-tfa/src/main/java/com/bot/arbitration/security/config/CustomUserDetailsService.java
 /media/alan/particao/git/bot/spring-security-oauth2-tfa/src/main/java/com/bot/arbitration/security/config/granter/MfaTokenGranter.java
 /media/alan/particao/git/bot/spring-security-oauth2-tfa/src/main/java/com/bot/arbitration/security/config/MethodSecurityConfig.java
-/media/alan/particao/git/bot/spring-security-oauth2-tfa/src/main/java/com/bot/arbitration/security/config/ArangoConfiguration.java
 /media/alan/particao/git/bot/spring-security-oauth2-tfa/src/main/java/com/bot/arbitration/security/model/UserDto.java
 /media/alan/particao/git/bot/spring-security-oauth2-tfa/src/main/java/com/bot/arbitration/security/config/CustomTokenEnhancer.java
 /media/alan/particao/git/bot/spring-security-oauth2-tfa/src/main/java/com/bot/arbitration/security/service/MfaService.java
