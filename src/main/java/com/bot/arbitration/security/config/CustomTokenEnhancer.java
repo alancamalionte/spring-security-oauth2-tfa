@@ -22,6 +22,7 @@ public class CustomTokenEnhancer implements TokenEnhancer {
 
         User usuario = userRepository.findByUsername(authentication.getName()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         final Map<String, Object> additionalInfo = new HashMap<>();
+        additionalInfo.put("name", usuario.getName());
         additionalInfo.put("id", usuario.getId());
         additionalInfo.put("googleAuthEnable", usuario.isGoogleAuthEnable());
         ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInfo);

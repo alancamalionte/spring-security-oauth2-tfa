@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
-Build-Jdk-Spec: 11
 Implementation-Title: spring-boot-oauth2-tfa
 Implementation-Version: 2.1.9.RELEASE
+Build-Jdk-Spec: 1.8
 Created-By: Maven Integration for Eclipse
 
