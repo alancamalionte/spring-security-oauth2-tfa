@@ -4,5 +4,5 @@ spring:
   data:
     arangodb:      hosts: localhost:8529
       user: root
-      password: root
+      password: 
       database: spring-demo
