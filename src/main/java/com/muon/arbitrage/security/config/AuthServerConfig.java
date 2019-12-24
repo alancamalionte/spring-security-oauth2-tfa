@@ -1,4 +1,4 @@
-package com.bot.arbitration.security.config;
+package com.muon.arbitrage.security.config;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,9 +23,9 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
-import com.bot.arbitration.security.config.granter.MfaTokenGranter;
-import com.bot.arbitration.security.config.granter.PasswordTokenGranter;
-import com.bot.arbitration.security.service.MfaService;
+import com.muon.arbitrage.security.config.granter.MfaTokenGranter;
+import com.muon.arbitrage.security.config.granter.PasswordTokenGranter;
+import com.muon.arbitrage.security.service.MfaService;
 
 @Configuration
 @EnableAuthorizationServer

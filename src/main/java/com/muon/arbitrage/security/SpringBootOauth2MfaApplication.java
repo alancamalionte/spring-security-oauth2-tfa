@@ -1,4 +1,4 @@
-package com.bot.arbitration.security;
+package com.muon.arbitrage.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -6,7 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.arangodb.springframework.core.ArangoOperations;
-import com.bot.arbitration.security.model.User;
+import com.muon.arbitrage.security.model.User;
 
 @SpringBootApplication
 public class SpringBootOauth2MfaApplication implements CommandLineRunner {

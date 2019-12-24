@@ -1,4 +1,4 @@
-package com.bot.arbitration.security.model;
+package com.muon.arbitrage.security.model;
 
 import java.time.LocalDate;
 

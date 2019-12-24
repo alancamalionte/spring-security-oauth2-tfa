@@ -1,9 +1,9 @@
-package com.bot.arbitration.security.config;
+package com.muon.arbitrage.security.config;
 
 import java.util.Optional;
 
 import com.arangodb.springframework.repository.ArangoRepository;
-import com.bot.arbitration.security.model.User;
+import com.muon.arbitrage.security.model.User;
 
 public interface UserRepository extends ArangoRepository<User, String> {
 

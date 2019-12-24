@@ -1,4 +1,4 @@
-package com.bot.arbitration.security.config;
+package com.muon.arbitrage.security.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import com.bot.arbitration.security.model.User;
+import com.muon.arbitrage.security.model.User;
 
 @Component
 public class CustomUserDetailsService implements UserDetailsService {

@@ -1,4 +1,4 @@
-package com.bot.arbitration.security.exception;
+package com.muon.arbitrage.security.exception;
 
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 

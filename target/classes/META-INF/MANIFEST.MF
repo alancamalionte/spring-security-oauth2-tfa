@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Implementation-Title: spring-boot-oauth2-tfa
+Implementation-Title: muon-security-oauth2-tfa
 Implementation-Version: 2.2.2.RELEASE
 Build-Jdk-Spec: 1.8
 Created-By: Maven Integration for Eclipse

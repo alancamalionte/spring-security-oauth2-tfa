@@ -1,4 +1,4 @@
-package com.bot.arbitration.security.config;
+package com.muon.arbitrage.security.config;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +10,7 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 
-import com.bot.arbitration.security.model.User;
+import com.muon.arbitrage.security.model.User;
 
 public class CustomTokenEnhancer implements TokenEnhancer {
 

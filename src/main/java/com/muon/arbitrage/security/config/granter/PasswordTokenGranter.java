@@ -1,4 +1,4 @@
-package com.bot.arbitration.security.config.granter;
+package com.muon.arbitrage.security.config.granter;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -22,9 +22,9 @@ import org.springframework.security.oauth2.provider.OAuth2Request;
 import org.springframework.security.oauth2.provider.TokenRequest;
 import org.springframework.security.oauth2.provider.token.AbstractTokenGranter;
 
-import com.bot.arbitration.security.config.UserRepository;
-import com.bot.arbitration.security.exception.MfaRequiredException;
-import com.bot.arbitration.security.model.User;
+import com.muon.arbitrage.security.config.UserRepository;
+import com.muon.arbitrage.security.exception.MfaRequiredException;
+import com.muon.arbitrage.security.model.User;
 
 
 public class PasswordTokenGranter extends AbstractTokenGranter {

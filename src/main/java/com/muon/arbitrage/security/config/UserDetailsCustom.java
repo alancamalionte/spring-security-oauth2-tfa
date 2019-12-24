@@ -1,4 +1,4 @@
-package com.bot.arbitration.security.config;
+package com.muon.arbitrage.security.config;
 
 import java.util.Collection;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
-import com.bot.arbitration.security.model.GoogleCredentials;
+import com.muon.arbitrage.security.model.GoogleCredentials;
 
 import lombok.Getter;
 
