@@ -19,7 +19,8 @@ public class UserDto {
     private String name;
     private String identity;
     private IdentityType identityType;
-    private long celular;
+    private String cellphone;
+    private String cellphonePrefix;
     
     @DateTimeFormat(pattern = "dd/MM/yyyy", iso = ISO.DATE_TIME)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
