@@ -6,3 +6,7 @@ spring:
       user: root
       password: 
       database: spring-demo
+
+      
+muon-kms: http://localhost:8087/muon-kms/
+      

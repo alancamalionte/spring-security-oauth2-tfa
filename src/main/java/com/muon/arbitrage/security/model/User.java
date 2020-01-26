@@ -10,7 +10,6 @@ import org.springframework.security.core.GrantedAuthority;
 
 import com.arangodb.springframework.annotation.Document;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -36,7 +35,6 @@ public class User  {
     
     private String name;
     
-    @JsonIgnore
     private List<GrantedAuthority> authoritys;
 
     @DateTimeFormat(pattern = "dd/MM/yyyy", iso = ISO.DATE_TIME)
@@ -58,7 +56,13 @@ public class User  {
 
 	private String verificationCode;
 	
-	private GoogleCredentials googleAuthCredentials;
+	//private GoogleCredentials googleAuthCredentials;
+	
+	private String tokenCredentials;
+	
+	private LocalDate registerDate;
+	
+	private String balance;
 	
 
 }
