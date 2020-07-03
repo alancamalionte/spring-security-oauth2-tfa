@@ -54,11 +54,11 @@ public class MfaTokenGranter extends AbstractTokenGranter {
                     return getAuthentication(tokenRequest, authentication, userDetails);
                 }
             } else {
-                throw new InvalidRequestException("Missing MFA code");
+                throw new InvalidRequestException("missing-2FA-code");
             }
-            throw new InvalidGrantException("Invalid MFA code");
+            throw new InvalidGrantException("invalid-authentication-code");
         } else {
-            throw new InvalidRequestException("Missing MFA token");
+            throw new InvalidRequestException("missing-2FA-token");
         }
     }
 
@@ -82,7 +82,7 @@ public class MfaTokenGranter extends AbstractTokenGranter {
         try {
             return Integer.parseInt(codeString);
         } catch (NumberFormatException e) {
-            throw new InvalidGrantException("Invalid MFA code");
+            throw new InvalidGrantException("invalid-authentication-code");
         }
     }
 
